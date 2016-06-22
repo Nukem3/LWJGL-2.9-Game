@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
 public class Window {
-
-	private static final int WIDTH = 1280;
-	private static final int HEIGHT = 720;
+	
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
 	private static final int FPS_CAP = 120;
 
 	public static String GAME_NAME = "Lowflow";
-	public static String GAME_VERSION = "a0.0.0.1";
+	public static String GAME_VERSION = "a0.0.1.0";
 
 	private static long lastFrameTime;
 	private static float delta;
