@@ -3,9 +3,12 @@ package com.nukem.engine;
 import org.lwjgl.opengl.Display;
 
 import com.nukem.entityShader.Shader;
-import com.nukem.model.RawModel;
-import com.nukem.render.Loader;
-import com.nukem.render.Renderer;
+
+import models.RawModel;
+import models.TexturedModel;
+import render.Loader;
+import render.Renderer;
+import textures.ModelTexture;
 
 public class Game {
 
@@ -17,23 +20,36 @@ public class Game {
 		Renderer re = new Renderer();
 		Shader shader = new Shader();
 
-		float vv = 1;
-		// Fills the entire viewport
-		float[] vertices = { -vv, -vv, -vv, vv, -vv, -vv, vv, vv, -vv, -vv, vv, -vv };
+		/*
+		 * Fills the entire viewport
+		 * float vv = 1;
+		 * float[] vertices = { -vv,
+		 * -vv, -vv, vv, -vv, -vv, vv, vv, -vv, -vv, vv, -vv };
+		 */
+		
+		// Vertices for a quad
+		float[] vertices = { -.4f, .4f, 0, -.4f, -.4f, 0, .4f, -.4f, 0, .4f, .4f, 0 };
 
 		// Indices' position
 		int[] indices = { 0, 1, 3, 3, 1, 2 };
 
+		// Texture Coordinate
+		float[] textureCoords = { 0, 0, 0, 1, 1, 1, 1, 0 };
+
 		// Create a RawModel
-		RawModel model = loader.loadToVAO(vertices, indices);
+		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+		// Create the texture
+		ModelTexture texture = new ModelTexture(loader.loadTexture("texture"));
+		// Create the texturedModel(RawModel + texture)
+		TexturedModel texturedModel = new TexturedModel(model, texture);
 
 		// While Loop (Update)
 		while (!Display.isCloseRequested()) {
-			
+
 			// Render
 			re.prepare();
 			shader.start();
-			re.render(model);
+			re.render(texturedModel);
 			shader.stop();
 
 			// Updates the screen

@@ -11,7 +11,8 @@ public class Shader extends Program {
 
 	@Override
 	protected void bindAttributes() {
-		super.bindAttribute(0, "position");
+		super.bindAttribute(0, "pos");
+		super.bindAttribute(1, "texCoords");
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.nukem.model;
+package models;
 
 public class RawModel {
 
