@@ -15,7 +15,7 @@ public class Window {
 	private static final int FPS_CAP = 120;
 
 	public static String GAME_NAME = "Lowflow";
-	public static String GAME_VERSION = "a0.0.0.0";
+	public static String GAME_VERSION = "a0.0.0.1";
 
 	private static long lastFrameTime;
 	private static float delta;
