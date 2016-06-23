@@ -1,4 +1,4 @@
-package com.nukem.engine;
+package engine;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
 public class Window {
-	
+
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	private static final int FPS_CAP = 120;
 
 	public static String GAME_NAME = "Lowflow";
-	public static String GAME_VERSION = "a0.0.1.1";
+	public static String GAME_VERSION = "a0.0.1.3";
 
 	private static long lastFrameTime;
 	private static float delta;
@@ -59,6 +59,14 @@ public class Window {
 	}
 
 	// Game timing
+
+	public static int getWidth() {
+		return WIDTH;
+	}
+
+	public static int getHeight() {
+		return HEIGHT;
+	}
 
 	public static long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
