@@ -1,17 +1,23 @@
-package com.nukem.entityShader;
+package entityShader;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 public abstract class Program {
 
 	private int programID;
 	private int vID;
 	private int fID;
+
+	private static FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
 
 	public Program(String vFile, String fFile) {
 		vID = loadShader(vFile, GL20.GL_VERTEX_SHADER);
@@ -22,6 +28,35 @@ public abstract class Program {
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
+		getAllUniformLocs();
+	}
+
+	protected abstract void getAllUniformLocs();
+
+	protected int getUniformLoc(String uniName) {
+		return GL20.glGetUniformLocation(programID, uniName);
+	}
+
+	protected void loadFloat(int loc, float v) {
+		GL20.glUniform1f(loc, v);
+	}
+
+	protected void loadVector(int loc, Vector3f vector) {
+		GL20.glUniform3f(loc, vector.x, vector.y, vector.z);
+	}
+
+	protected void loadBoolean(int loc, boolean v) {
+		float toLoad = 0;
+		if (v) {
+			toLoad = 1;
+		}
+		GL20.glUniform1f(loc, toLoad);
+	}
+
+	protected void loadMatrix(int loc, Matrix4f mat) {
+		mat.store(matBuffer);
+		matBuffer.flip();
+		GL20.glUniformMatrix4(loc, false, matBuffer);
 	}
 
 	public void start() {
