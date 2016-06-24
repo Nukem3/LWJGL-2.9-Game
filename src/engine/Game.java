@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -13,9 +12,10 @@ import entities.Entity;
 import entities.Light;
 import models.RawModel;
 import models.TexturedModel;
+import obj.ModelData;
+import obj.OBJFileLoader;
 import render.Loader;
 import render.Master;
-import render.OBJ;
 import terrain.Terrain;
 import textures.ModelTexture;
 
@@ -30,19 +30,21 @@ public class Game {
 		List<Entity> entities = new ArrayList<Entity>();
 
 		// Crate
-		RawModel crateModel = OBJ.loadOBJ("crate", loader);
-		TexturedModel crate = new TexturedModel(crateModel, new ModelTexture(loader.loadTexture("/crate")));
-		ModelTexture mt_crate = crate.getTexture();
-		mt_crate.setShineDamper(10);
-		mt_crate.setReflectivity(0.5f);
+		ModelData crateData = OBJFileLoader.loadOBJ("crate");
+		RawModel crateModel = loader.loadToVAO(crateData.getVertices(), crateData.getTextureCoords(),
+				crateData.getNormals(), crateData.getIndices());
+		TexturedModel crate = new TexturedModel(crateModel, new ModelTexture(loader.loadTexture("crate")));
 
-		TexturedModel grass = new TexturedModel(OBJ.loadOBJ("grass", loader),
-				new ModelTexture(loader.loadTexture("/grass")));
+		// Grass
+		ModelData grassData = OBJFileLoader.loadOBJ("grass");
+		RawModel grassModel = loader.loadToVAO(grassData.getVertices(), grassData.getTextureCoords(),
+				grassData.getNormals(), grassData.getIndices());
+		TexturedModel grass = new TexturedModel(grassModel, new ModelTexture(loader.loadTexture("grass")));
 		grass.getTexture().setHasTransparency(true);
 		grass.getTexture().setUseFakeLight(true);
 
 		// Entities
-		Entity e0 = new Entity(crate, new Vector3f(0, 0, -25f), 0, 0, 0, 1);
+		Entity e0 = new Entity(crate, new Vector3f(0, 0, 0), 0, 0, 0, 1);
 
 		Camera cam = new Camera();
 
@@ -55,7 +57,7 @@ public class Game {
 		Random rand = new Random();
 		for (int i = 0; i < 500; i++) {
 			entities.add(
-					new Entity(grass, new Vector3f(rand.nextFloat() * 752, 0, rand.nextFloat() * - 1000), 0, 0, 0, 3));
+					new Entity(grass, new Vector3f(rand.nextFloat() * 752, 0, rand.nextFloat() * -1000), 0, 0, 0, 3));
 		}
 
 		entities.add(e0);
@@ -64,6 +66,8 @@ public class Game {
 		while (!Display.isCloseRequested()) {
 			cam.camInput();
 
+			e0.increaseRot(0, 0.1f, 0);
+			
 			// Render
 			r.render(light, cam);
 			r.processTerrain(t);

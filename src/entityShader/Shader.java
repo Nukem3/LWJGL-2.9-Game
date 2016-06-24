@@ -1,6 +1,7 @@
 package entityShader;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
@@ -19,6 +20,7 @@ public class Shader extends Program {
 	private int loc_shine;
 	private int loc_reflectivity;
 	private int loc_useFakeLight;
+	private int loc_skyColour;
 
 	public Shader() {
 		super(v_file, f_file);
@@ -41,12 +43,17 @@ public class Shader extends Program {
 		loc_shine = super.getUniformLoc("shineDamper");
 		loc_reflectivity = super.getUniformLoc("reflectivity");
 		loc_useFakeLight = super.getUniformLoc("useFakeLight");
+		loc_skyColour = super.getUniformLoc("skyColour");
 	}
-	
+
+	public void loadSkyColour(float r, float g, float b) {
+		super.loadVector(loc_skyColour, new Vector3f(r,g,b));
+	}
+
 	public void loadFakeLightVariable(boolean useFake) {
 		super.loadBoolean(loc_useFakeLight, useFake);
 	}
-	
+
 	public void loadShine(float damper, float reflectivity) {
 		super.loadFloat(loc_shine, damper);
 		super.loadFloat(loc_reflectivity, reflectivity);
@@ -55,7 +62,7 @@ public class Shader extends Program {
 	public void loadTransformationMatrix(Matrix4f mat) {
 		super.loadMatrix(loc_transMat, mat);
 	}
-	
+
 	public void loadLight(Light light) {
 		super.loadVector(loc_lightPos, light.getPosition());
 		super.loadVector(loc_lightCol, light.getCol());

@@ -1,6 +1,7 @@
 package terrain;
 
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Light;
@@ -19,6 +20,7 @@ public class TerrainShader extends Program {
 	private int loc_lightCol;
 	private int loc_shine;
 	private int loc_reflectivity;
+	private int loc_skyColour;
 
 	public TerrainShader() {
 		super(v_file, f_file);
@@ -40,8 +42,13 @@ public class TerrainShader extends Program {
 		loc_lightCol = super.getUniformLoc("lightCol");
 		loc_shine = super.getUniformLoc("shineDamper");
 		loc_reflectivity = super.getUniformLoc("reflectivity");
+		loc_skyColour = super.getUniformLoc("skyColour");
 	}
-	
+
+	public void loadSkyColour(float r, float g, float b) {
+		super.loadVector(loc_skyColour, new Vector3f(r, g, b));
+	}
+
 	public void loadShine(float damper, float reflectivity) {
 		super.loadFloat(loc_shine, damper);
 		super.loadFloat(loc_reflectivity, reflectivity);
@@ -50,7 +57,7 @@ public class TerrainShader extends Program {
 	public void loadTransformationMatrix(Matrix4f mat) {
 		super.loadMatrix(loc_transMat, mat);
 	}
-	
+
 	public void loadLight(Light light) {
 		super.loadVector(loc_lightPos, light.getPosition());
 		super.loadVector(loc_lightCol, light.getCol());

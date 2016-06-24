@@ -25,6 +25,10 @@ public class Master {
 	private static final float NEAR = 0.1f;
 	private static final float FAR = 1000;
 
+	private static final float R = .125f;
+	private static final float G = .25f;
+	private static final float B = .5f;
+
 	private Matrix4f projMat;
 
 	private Shader shader = new Shader();
@@ -55,11 +59,13 @@ public class Master {
 	public void render(Light sun, Camera cam) {
 		prepare();
 		shader.start();
+		shader.loadSkyColour(R, G, B);
 		shader.loadLight(sun);
 		shader.loadViewMat(cam);
 		re.render(entities);
 		shader.stop();
 		tS.start();
+		tS.loadSkyColour(R, G, B);
 		tS.loadLight(sun);
 		tS.loadViewMat(cam);
 		tRe.render(terrs);
@@ -93,7 +99,7 @@ public class Master {
 	public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glClearColor(0.0125f, 0.25f, 0.5f, 1);
+		GL11.glClearColor(R, G, B, 1);
 	}
 
 	// Create Projection Matrix
