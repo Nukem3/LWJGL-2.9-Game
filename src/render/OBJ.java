@@ -73,6 +73,7 @@ public class OBJ {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 
 		verticesArray = new float[vertices.size() * 3];

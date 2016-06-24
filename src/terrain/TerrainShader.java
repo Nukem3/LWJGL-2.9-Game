@@ -1,15 +1,16 @@
-package entityShader;
+package terrain;
 
 import org.lwjgl.util.vector.Matrix4f;
 
 import entities.Camera;
 import entities.Light;
+import entityShader.Program;
 import tools.Maths;
 
-public class Shader extends Program {
+public class TerrainShader extends Program {
 
-	private static final String v_file = "src/entityShader/vShader.txt";
-	private static final String f_file = "src/entityShader/fShader.txt";
+	private static final String v_file = "src/terrain/tVS.txt";
+	private static final String f_file = "src/terrain/tFS.txt";
 
 	private int loc_transMat;
 	private int loc_projMat;
@@ -18,9 +19,8 @@ public class Shader extends Program {
 	private int loc_lightCol;
 	private int loc_shine;
 	private int loc_reflectivity;
-	private int loc_useFakeLight;
 
-	public Shader() {
+	public TerrainShader() {
 		super(v_file, f_file);
 	}
 
@@ -33,18 +33,13 @@ public class Shader extends Program {
 
 	@Override
 	protected void getAllUniformLocs() {
-		loc_transMat = super.getUniformLoc("transformationMatrix");
-		loc_projMat = super.getUniformLoc("projectionMatrix");
-		loc_viewMat = super.getUniformLoc("viewMatrix");
-		loc_lightPos = super.getUniformLoc("lightPosition");
-		loc_lightCol = super.getUniformLoc("lightColour");
+		loc_transMat = super.getUniformLoc("transMat");
+		loc_projMat = super.getUniformLoc("projMat");
+		loc_viewMat = super.getUniformLoc("viewMat");
+		loc_lightPos = super.getUniformLoc("lightPos");
+		loc_lightCol = super.getUniformLoc("lightCol");
 		loc_shine = super.getUniformLoc("shineDamper");
 		loc_reflectivity = super.getUniformLoc("reflectivity");
-		loc_useFakeLight = super.getUniformLoc("useFakeLight");
-	}
-	
-	public void loadFakeLightVariable(boolean useFake) {
-		super.loadBoolean(loc_useFakeLight, useFake);
 	}
 	
 	public void loadShine(float damper, float reflectivity) {

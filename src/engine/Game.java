@@ -2,6 +2,7 @@ package engine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -15,6 +16,7 @@ import models.TexturedModel;
 import render.Loader;
 import render.Master;
 import render.OBJ;
+import terrain.Terrain;
 import textures.ModelTexture;
 
 public class Game {
@@ -23,66 +25,52 @@ public class Game {
 		// Initialize Display & Render Engine
 		Window.initWindow();
 		Loader loader = new Loader();
-		Master r = new Master(); 
-		
+		Master r = new Master();
+
+		List<Entity> entities = new ArrayList<Entity>();
+
 		// Crate
-		RawModel crateModel = OBJ.loadOBJ("crate", loader); // Load the Model
-		TexturedModel crate = new TexturedModel(crateModel, new ModelTexture(loader.loadTexture("/textures/crate"))); // Load the texture
+		RawModel crateModel = OBJ.loadOBJ("crate", loader);
+		TexturedModel crate = new TexturedModel(crateModel, new ModelTexture(loader.loadTexture("/crate")));
 		ModelTexture mt_crate = crate.getTexture();
 		mt_crate.setShineDamper(10);
 		mt_crate.setReflectivity(0.5f);
-		
-		// Sphere
-		RawModel sphereModel = OBJ.loadOBJ("sphere", loader); // Load the Model
-		TexturedModel sphere = new TexturedModel(sphereModel, new ModelTexture(loader.loadTexture("/textures/texture"))); // Load the texture
-		ModelTexture mt_sphere = sphere.getTexture();
-		mt_sphere.setShineDamper(10);
-		mt_sphere.setReflectivity(0.5f);
-		
-		// Dragon
-		RawModel dragonModel = OBJ.loadOBJ("dragon", loader); // Load the Model
-		TexturedModel dragon = new TexturedModel(dragonModel, new ModelTexture(loader.loadTexture("/textures/texture"))); // Load the texture
-		ModelTexture mt_dragon = dragon.getTexture();
-		mt_dragon.setShineDamper(10);
-		mt_dragon.setReflectivity(0.5f);
-	
+
+		TexturedModel grass = new TexturedModel(OBJ.loadOBJ("grass", loader),
+				new ModelTexture(loader.loadTexture("/grass")));
+		grass.getTexture().setHasTransparency(true);
+		grass.getTexture().setUseFakeLight(true);
+
 		// Entities
 		Entity e0 = new Entity(crate, new Vector3f(0, 0, -25f), 0, 0, 0, 1);
-		Entity e1 = new Entity(sphere, new Vector3f(10, 0, -25f), 0, 0, 0, 1);
-		Entity e2 = new Entity(dragon, new Vector3f(-20, 0, -25f), 0, 0, 0, 1);
-		
+
 		Camera cam = new Camera();
-		
+
 		// Sun
-		Light light = new Light(new Vector3f(10, 10, -20), new Vector3f(1, 1, 1));
-		
+		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
+
+		// Terrain
+		Terrain t = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("terrain_grass")));
+
+		Random rand = new Random();
+		for (int i = 0; i < 500; i++) {
+			entities.add(
+					new Entity(grass, new Vector3f(rand.nextFloat() * 752, 0, rand.nextFloat() * - 1000), 0, 0, 0, 3));
+		}
+
+		entities.add(e0);
+
 		// While Loop (Update)
 		while (!Display.isCloseRequested()) {
-
-			float xx = 0;
-			float yy = 0;
-			float zz = 0;
-
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-				zz += 1;
-			} else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-				zz -= 1;
-			}
-
-			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-				xx -= 1;
-			} else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-				xx += 1;
-			}
-
-			e0.increaseRot(xx, yy, zz);
-
 			cam.camInput();
+
 			// Render
 			r.render(light, cam);
-			r.processEntity(e0);
-			r.processEntity(e1);
-			r.processEntity(e2);
+			r.processTerrain(t);
+
+			for (Entity entity : entities) {
+				r.processEntity(entity);
+			}
 			// Updates the screen
 			Window.updateDisplay();
 		}

@@ -5,18 +5,34 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Camera {
 
-	private Vector3f pos = new Vector3f(0, 0, 0);
+	private Vector3f pos = new Vector3f(512, 5, 12);
 	private float pitch;
 	private float yaw;
 	private float roll;
 
 	public void camInput() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			pos.x += 1f;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			pos.x -= 1f;
+		}
+
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			pos.z -= .02f;
+			pos.z -= 1f;
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			pos.z += .02f;
+			pos.z += 1f;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			pos.y += 1f;
+		}
+
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			pos.y -= 1f;
 		}
 	}
 

@@ -40,7 +40,7 @@ public class Loader {
 		Texture texture = null;
 
 		try {
-			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + file + ".png"));
+			texture = TextureLoader.getTexture("PNG", new FileInputStream("res/textures/" + file + ".png"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
