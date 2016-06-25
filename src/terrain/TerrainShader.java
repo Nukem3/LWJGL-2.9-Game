@@ -21,6 +21,11 @@ public class TerrainShader extends Program {
 	private int loc_shine;
 	private int loc_reflectivity;
 	private int loc_skyColour;
+	private int loc_back;
+	private int loc_r;
+	private int loc_g;
+	private int loc_b;
+	private int loc_blend;
 
 	public TerrainShader() {
 		super(v_file, f_file);
@@ -43,6 +48,19 @@ public class TerrainShader extends Program {
 		loc_shine = super.getUniformLoc("shineDamper");
 		loc_reflectivity = super.getUniformLoc("reflectivity");
 		loc_skyColour = super.getUniformLoc("skyColour");
+		loc_back = super.getUniformLoc("backTex");
+		loc_r = super.getUniformLoc("rTex");
+		loc_g = super.getUniformLoc("gTex");
+		loc_b = super.getUniformLoc("bTex");
+		loc_blend = super.getUniformLoc("blend");
+	}
+	
+	public void connectTextureUnits() {
+		super.loadInt(loc_back, 0);
+		super.loadInt(loc_r, 1);
+		super.loadInt(loc_g, 2);
+		super.loadInt(loc_b, 3);
+		super.loadInt(loc_blend, 4);
 	}
 
 	public void loadSkyColour(float r, float g, float b) {

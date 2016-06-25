@@ -18,6 +18,8 @@ import render.Loader;
 import render.Master;
 import terrain.Terrain;
 import textures.ModelTexture;
+import textures.TerrainPack;
+import textures.TerrainTexture;
 
 public class Game {
 
@@ -26,6 +28,14 @@ public class Game {
 		Window.initWindow();
 		Loader loader = new Loader();
 		Master r = new Master();
+
+		TerrainTexture back = new TerrainTexture(loader.loadTexture("terrain_dirt"));
+		TerrainTexture red = new TerrainTexture(loader.loadTexture("terrain_grass"));
+		TerrainTexture green = new TerrainTexture(loader.loadTexture("rock"));
+		TerrainTexture blue = new TerrainTexture(loader.loadTexture("terrain_grass1"));
+
+		TerrainPack tpack = new TerrainPack(back, red, green, blue);
+		TerrainTexture blend = new TerrainTexture(loader.loadTexture("blendMap"));
 
 		List<Entity> entities = new ArrayList<Entity>();
 
@@ -52,12 +62,17 @@ public class Game {
 		Light light = new Light(new Vector3f(20000, 20000, 2000), new Vector3f(1, 1, 1));
 
 		// Terrain
-		Terrain t = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("terrain_grass")));
+		Terrain t = new Terrain(0, -1, loader, tpack, blend);
 
 		Random rand = new Random();
-		for (int i = 0; i < 500; i++) {
-			entities.add(
-					new Entity(grass, new Vector3f(rand.nextFloat() * 752, 0, rand.nextFloat() * -1000), 0, 0, 0, 3));
+		for (int i = 0; i < 400; i++) {
+
+			float xx = rand.nextFloat() * 752;
+			float zz = rand.nextFloat() * -400;
+
+			if (i % 7 == 0) {
+				entities.add(new Entity(grass, new Vector3f(xx, 0, zz), 0, 0, 0, 2));
+			}
 		}
 
 		entities.add(e0);
@@ -67,7 +82,7 @@ public class Game {
 			cam.camInput();
 
 			e0.increaseRot(0, 0.1f, 0);
-			
+
 			// Render
 			r.render(light, cam);
 			r.processTerrain(t);

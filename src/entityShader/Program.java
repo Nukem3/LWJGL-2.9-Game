@@ -36,6 +36,10 @@ public abstract class Program {
 	protected int getUniformLoc(String uniName) {
 		return GL20.glGetUniformLocation(programID, uniName);
 	}
+	
+	protected void loadInt(int loc, int v) {
+		GL20.glUniform1i(loc, v);
+	}
 
 	protected void loadFloat(int loc, float v) {
 		GL20.glUniform1f(loc, v);

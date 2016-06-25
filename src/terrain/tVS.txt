@@ -23,7 +23,7 @@ void main(void) {
 	vec4 worldPos = transMat * vec4(pos, 1.0);
 	vec4 posRelToCam = viewMat * worldPos;
 	gl_Position = projMat * posRelToCam;
-	pass_texCoords = texCoords * 40.0;
+	pass_texCoords = texCoords;
 	
 	surfaceNormal = (transMat * vec4(normal, 0.0)).xyz;
 	toLightVector = lightPos - worldPos.xyz;
